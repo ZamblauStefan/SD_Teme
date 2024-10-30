@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping(value = "/device")
 public class DeviceController {
 
