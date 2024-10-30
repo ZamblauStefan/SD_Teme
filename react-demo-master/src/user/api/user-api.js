@@ -24,9 +24,19 @@ function insertUserWithSync(user, callback) {
 function getUsers(callback) {
     let request = new Request(HOST.users_api + endpoint.user, {
         method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json'},
     });
     console.log(request.url);
-    RestApiClient.performRequest(request, callback);
+    //RestApiClient.performRequest(request, callback);
+    RestApiClient.performRequest(request, (result, status, error) => {
+        if (error) {
+            console.error("Error during getUsers:", error);
+        } else {
+            callback(result);
+        }
+    });
 }
 
 // Functia pentru stergerea utilizatorului
@@ -85,7 +95,9 @@ function getDevicesByUserId(userId, callback) {
         method: 'GET',
     });
 
-    console.log("Request URL:", request.url);
+    console.log("Request URL:", HOST.devices_api + endpoint.device + '/user/' + userId);
+
+    //console.log("Request URL:", request.url);
 
     RestApiClient.performRequest(request, callback);
 }

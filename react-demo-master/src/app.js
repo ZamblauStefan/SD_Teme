@@ -18,9 +18,8 @@ import UserContainer from './user/user-container'
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
  */
 
-class App extends React.Component {
+function App(){
 
-    render() {
         const isAuthenticated = localStorage.getItem('role') !== null;
 
         return (
@@ -30,21 +29,28 @@ class App extends React.Component {
                     <NavigationBar />
                     <Routes>
                         {/* Ruta pentru Login */}
-                        <Route path="/" element={isAuthenticated ? <Home /> : <Navigate to="/login" />} />
                         <Route path="/login" element={<LoginPage/>} />
 
                         {/* Rute protejate pentru admin si client */}
                         <Route
                             path="/admin"
-                            element={<PrivateRoute roles={['ADMIN']} component={AdminPage} />}
+                            element={
+                                <PrivateRoute roles={['ADMIN']}>
+                                    <AdminPage />
+                                </PrivateRoute>
+                            }
                         />
                         <Route
                             path="/client"
-                            element={<PrivateRoute roles={['CLIENT']} component={ClientPage} />}
+                            element={
+                                <PrivateRoute roles={['CLIENT']}>
+                                    <ClientPage />
+                                </PrivateRoute>
+                            }
                         />
 
                         {/* ruta Home */}
-                        <Route path="/" element={<Home />} />
+                        <Route path="/" element={isAuthenticated ? <Home /> : <Navigate to="/login" />} />
                         <Route path="/error" element={<ErrorPage />} />
 
                         {/* Ruta pentru pagini inexistente/acces neautorizat */}
@@ -56,7 +62,6 @@ class App extends React.Component {
             </Router>
             </div>
         )
-    };
 }
 
 export default App

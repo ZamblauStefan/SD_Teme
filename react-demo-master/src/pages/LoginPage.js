@@ -27,9 +27,16 @@ function LoginPage() {
                 console.log(data);  // Verifica daca `data` contine `userId`
                 // Salveaza detalile userului in localStorage
                 localStorage.setItem('userId', data.userId);
+                console.log("User ID saved:", data.userId);
+
                 localStorage.setItem('role', data.role); //salvam rolul
+                console.log("Role saved:", data.role);
+
                 localStorage.setItem('userName', data.name); //salvam numele
+                console.log("User Name saved:", data.name);
+
                 localStorage.setItem('token', data.token); //salvam token (deocamdata nefolosit)
+                console.log("Token saved:", data.token);
 
                 // Redirectioneaza la pagina corespunzatoare rolului
                 if (data.role === 'ADMIN') {
