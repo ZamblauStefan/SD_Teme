@@ -10,7 +10,7 @@ const endpoint = {
 
 // Inserare utilizator cu sincronizare
 function insertUserWithSync(user, callback) {
-    let request = new Request(HOST.users_api + endpoint.userWithSync, {
+    let request = new Request(HOST.users_api + '/user' + endpoint.userWithSync, {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
@@ -102,6 +102,75 @@ function getDevicesByUserId(userId, callback) {
     RestApiClient.performRequest(request, callback);
 }
 
+// Functia pentru a obtine toate dispozitivele
+function getDevices(callback) {
+    let request = new Request(HOST.devices_api + endpoint.device, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    });
+
+    console.log(request.url);
+    RestApiClient.performRequest(request, callback);
+}
+
+// Functia pentru a actualiza un dispozitiv
+function updateDevice(device, callback) {
+    let request = new Request(HOST.devices_api + endpoint.device + '/' + device.id, {
+        method: 'PUT',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(device)
+    });
+
+    console.log("URL: " + request.url);
+    RestApiClient.performRequest(request, callback);
+}
+
+// Functia pentru stergerea unui dispozitiv
+function deleteDevice(deviceId, callback) {
+    let request = new Request(HOST.devices_api + endpoint.device + '/' + deviceId, {
+        method: 'DELETE',
+    });
+
+    console.log("Delete Device Request URL:", request.url);
+    RestApiClient.performRequest(request, callback);
+}
+
+// Inserare dispozitiv
+function insertDevice(device, callback) {
+    let request = new Request(HOST.devices_api +'/device' +'/insertDeviceForUser', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(device),
+    });
+
+    console.log("Insert Device Request URL:", request.url);
+    RestApiClient.performRequest(request, callback);
+}
+
+// Functia pentru inserarea unui dispozitiv fără userID
+function insertDeviceNoUser(device, callback) {
+    let request = new Request(HOST.devices_api + endpoint.device + "/insertDeviceNoUser", {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(device),
+    });
+
+    console.log("Insert Device Request URL:", request.url);
+    RestApiClient.performRequest(request, callback);
+}
+
+
 
 export {
     insertUserWithSync,
@@ -110,5 +179,10 @@ export {
     getUserById,
     postUser,
     updateUser,
-    getDevicesByUserId
+    getDevicesByUserId,
+    getDevices,
+    updateDevice,
+    deleteDevice,
+    insertDevice,
+    insertDeviceNoUser
 };

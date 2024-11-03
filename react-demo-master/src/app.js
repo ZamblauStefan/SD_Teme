@@ -55,7 +55,7 @@ function App(){
 
                         {/* Ruta pentru pagini inexistente/acces neautorizat */}
                         <Route path="/unauthorized" element={<UnauthorizedPage />} />
-                        <Route path="*" element={<UnauthorizedPage />} /> {/* Redirectioneaza la Unauthorized dacă ruta nu este găsită */}
+                        <Route path="*" element={<UnauthorizedPage />} /> {/* Redirectioneaza la Unauthorized daca ruta nu este gasita */}
 
                     </Routes>
                 </div>

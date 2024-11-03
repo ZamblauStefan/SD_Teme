@@ -1,17 +1,21 @@
-function performRequest(request, callback){
+function performRequest(request, callback) {
     fetch(request)
-        .then(
-            function(response) {
-                if (response.ok) {
-                    response.json().then(json => callback(json, response.status,null));
+        .then(function(response) {
+            // Incearca sa obtii raspunsul ca text
+            return response.text().then((text) => {
+                try {
+                    // Incearca sa parsezi raspunsul ca JSON
+                    const json = JSON.parse(text);
+                    callback(json, response.status, null);
+                } catch (error) {
+                    // Dacă raspunsul nu este JSON, trimite-l ca text
+                    callback(text, response.status, null);
                 }
-                else {
-                    response.json().then(err => callback(null, response.status,  err));
-                }
-            })
-        .catch(function (err) {
-            //catch any other unexpected error, and set custom code for error = 1
-            callback(null, 1, err)
+            });
+        })
+        .catch(function(err) {
+            // prinde orice altă eroare neașteptata si seteaza codul de eroare la 1
+            callback(null, 1, err);
         });
 }
 

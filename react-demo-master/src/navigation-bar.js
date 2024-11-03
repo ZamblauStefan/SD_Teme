@@ -1,5 +1,5 @@
 import React from 'react'
-import logo from './commons/images/icon.png';
+import logo from './commons/images/TsunamyIcon.png';
 
 import {
     DropdownItem,
@@ -33,7 +33,7 @@ const NavigationBar = () => (
                     <DropdownMenu right >
 
                         <DropdownItem>
-                            <NavLink href="/person">Persons</NavLink>
+                            <NavLink href="/login">Login</NavLink>
                         </DropdownItem>
 
 

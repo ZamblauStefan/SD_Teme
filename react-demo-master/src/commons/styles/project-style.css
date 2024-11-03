@@ -311,3 +311,44 @@
     background: #DCDCDC;
     border-color: #A9A9A9
 }
+table {
+    width: 100%; /* Lățimea tabelului pe tot ecranul */
+    border-collapse: collapse; /* Elimină spațiul dintre borduri */
+}
+
+th, td {
+    color: white; /* Schimbă culoarea textului la alb */
+    padding: 10px; /* Spațiu în jurul textului */
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Contur alb transparent */
+    text-align: left; /* Aliniere la stânga */
+}
+
+/* pentru tabel ClientPage/AdminPage*/
+.table-header {
+    border: 2px solid white;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.7); /* Fundal semi-transparent */
+    padding: 10px;
+    text-align: center;
+}
+
+.unauthorized-container {
+    height: 100vh; /* Înălțimea paginii */
+    width: 100vw;  /* Lățimea paginii */
+    background-image: url('../images/Dalle5.webp'); /* Calea către imaginea de fundal */
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white; /* Schimbă culoarea textului, dacă este necesar */
+    text-align: center;
+}
+
+.unauthorized-message {
+    font-size: 2rem; /* Mărimea textului pentru mesaj */
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.5); /* Fundal semi-transparent pentru a face textul mai lizibil */
+    border-radius: 10px;
+}
