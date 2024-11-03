@@ -12,6 +12,7 @@ com\example\usersapp\controllers\handlers\exceptions\model\DuplicateResourceExce
 com\example\usersapp\controllers\handlers\exceptions\model\ResourceNotFoundException.class
 com\example\usersapp\repositories\UserRepository.class
 com\example\usersapp\controllers\IndexController.class
+com\example\usersapp\entities\LoginRequest.class
 com\example\usersapp\entities\User.class
 com\example\usersapp\UsersAppApplication.class
 com\example\usersapp\controllers\handlers\exceptions\model\CustomException.class

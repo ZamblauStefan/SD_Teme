@@ -13,7 +13,7 @@ import java.util.UUID;
 
 
 @Entity
-@Table(name = "user_accounts")
+@Table(name = "user_accounts",uniqueConstraints = @UniqueConstraint(columnNames = "name"))
 public class User implements Serializable{
 
     private static final long serialVersionUID = 1L;

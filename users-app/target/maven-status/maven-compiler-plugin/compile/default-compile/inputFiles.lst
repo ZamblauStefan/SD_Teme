@@ -14,6 +14,7 @@ D:\DS2024_30241_Zamblau_Stefan\Assignment_1\users-app\src\main\java\com\example\
 D:\DS2024_30241_Zamblau_Stefan\Assignment_1\users-app\src\main\java\com\example\usersapp\dtos\UserDTO.java
 D:\DS2024_30241_Zamblau_Stefan\Assignment_1\users-app\src\main\java\com\example\usersapp\dtos\validators\annotation\RoleType.java
 D:\DS2024_30241_Zamblau_Stefan\Assignment_1\users-app\src\main\java\com\example\usersapp\dtos\validators\RoleValidator.java
+D:\DS2024_30241_Zamblau_Stefan\Assignment_1\users-app\src\main\java\com\example\usersapp\entities\LoginRequest.java
 D:\DS2024_30241_Zamblau_Stefan\Assignment_1\users-app\src\main\java\com\example\usersapp\entities\User.java
 D:\DS2024_30241_Zamblau_Stefan\Assignment_1\users-app\src\main\java\com\example\usersapp\repositories\UserRepository.java
 D:\DS2024_30241_Zamblau_Stefan\Assignment_1\users-app\src\main\java\com\example\usersapp\security\SecurityConfig.java

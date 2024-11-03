@@ -26,7 +26,7 @@ import java.util.*;
 
 
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @RequestMapping(value = "/user")
 public class UserController {
 

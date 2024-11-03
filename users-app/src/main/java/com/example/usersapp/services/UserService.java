@@ -69,12 +69,31 @@ public class UserService {
         user.setName(userDTO.getName());
         user.setRole(userDTO.getRole());
 
+        // Actualizam parola daca este furnizata
+        if (userDTO.getPassword() != null && !userDTO.getPassword().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        }
+
+
         userRepository.save(user);
         return user.getId();
     }
 
     //Delete
     public void delete(UUID userId) {
+        //setam valoarea NULL pe user_id din device
+        String devicesAppUrl = "http://localhost:8082/device/nullifyUserId/" + userId;
+        RestTemplate restTemplate = new RestTemplate();
+
+        try {
+            ResponseEntity<Void> response = restTemplate.postForEntity(devicesAppUrl, null, Void.class);
+            if (!response.getStatusCode().is2xxSuccessful()) {
+                throw new RuntimeException("Eroare la setarea valorii null pentru user_id în devices-db.");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Eroare la setarea valorii null pentru user_id în devices-db: " + e.getMessage());
+        }
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
         // Stergem utilizatorul din baza de date users-db
