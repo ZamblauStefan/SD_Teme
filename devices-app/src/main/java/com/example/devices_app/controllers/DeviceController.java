@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @RequestMapping(value = "/device")
 public class DeviceController {
 
@@ -113,5 +113,23 @@ public class DeviceController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
+
+    @PostMapping("/nullifyUserId/{userId}")
+    public ResponseEntity<Void> nullifyUserId(@PathVariable UUID userId) {
+        try {
+            deviceService.nullifyUserId(userId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/insertDeviceNoUser")
+    public ResponseEntity<UUID> insertDevice(@RequestBody DeviceDetailsDTO deviceDTO) {
+        UUID deviceID = deviceService.insertDeviceNoUser(deviceDTO);
+        return new ResponseEntity<>(deviceID, HttpStatus.CREATED);
+    }
+
+
 
 }

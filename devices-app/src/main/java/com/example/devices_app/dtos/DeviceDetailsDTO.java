@@ -11,25 +11,25 @@ public class DeviceDetailsDTO {
     @NotNull
     private String address;
     @NotNull
-    private int max_hourly_energy_consumption;
+    private int maxHourlyEnergyConsumption;
     @NotNull
     private UUID userID;
 
     public DeviceDetailsDTO() {
     }
 
-    public DeviceDetailsDTO(String description, String address, int max_hourly_energy_consumption, UUID userID) {
+    public DeviceDetailsDTO(String description, String address, int maxHourlyEnergyConsumption, UUID userID) {
         this.description = description;
         this.address = address;
-        this.max_hourly_energy_consumption = max_hourly_energy_consumption;
+        this.maxHourlyEnergyConsumption = maxHourlyEnergyConsumption;
         this.userID = userID;
     }
 
-    public DeviceDetailsDTO(UUID id, String description, String address, int max_hourly_energy_consumption, UUID userID) {
+    public DeviceDetailsDTO(UUID id, String description, String address, int maxHourlyEnergyConsumption, UUID userID) {
         this.id = id;
         this.description = description;
         this.address = address;
-        this.max_hourly_energy_consumption = max_hourly_energy_consumption;
+        this.maxHourlyEnergyConsumption = maxHourlyEnergyConsumption;
         this.userID = userID;
     }
 
@@ -57,12 +57,12 @@ public class DeviceDetailsDTO {
         this.address = address;
     }
 
-    public int getMax_hourly_energy_consumption() {
-        return max_hourly_energy_consumption;
+    public int getmaxHourlyEnergyConsumption() {
+        return maxHourlyEnergyConsumption;
     }
 
-    public void setMax_hourly_energy_consumption(int max_hourly_energy_consumption) {
-        this.max_hourly_energy_consumption = max_hourly_energy_consumption;
+    public void setmaxHourlyEnergyConsumption(int maxHourlyEnergyConsumption) {
+        this.maxHourlyEnergyConsumption = maxHourlyEnergyConsumption;
     }
 
     public UUID getUserID() {

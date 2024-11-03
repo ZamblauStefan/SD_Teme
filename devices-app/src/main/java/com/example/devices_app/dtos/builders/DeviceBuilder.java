@@ -13,16 +13,16 @@ public class DeviceBuilder {
 
 
     public static DeviceDTO toDeviceDTO(Device device) {
-        return new DeviceDTO(device.getId(), device.getDescription(), device.getAddress(), device.getMax_hourly_energy_consumption(),device.getUserId());
+        return new DeviceDTO(device.getId(), device.getDescription(), device.getAddress(), device.getmaxHourlyEnergyConsumption(),device.getUserId());
     }
 
     public static DeviceDetailsDTO toDeviceDetailsDTO(Device device) {
-        return new DeviceDetailsDTO(device.getId(), device.getDescription(), device.getAddress(),device.getMax_hourly_energy_consumption(),device.getUserId());
+        return new DeviceDetailsDTO(device.getId(), device.getDescription(), device.getAddress(),device.getmaxHourlyEnergyConsumption(),device.getUserId());
     }
 
     public static Device toEntity(DeviceDetailsDTO deviceDetailsDTO) {
         return new Device(deviceDetailsDTO.getDescription(),
-                deviceDetailsDTO.getAddress(),deviceDetailsDTO.getMax_hourly_energy_consumption(), deviceDetailsDTO.getUserID());
+                deviceDetailsDTO.getAddress(),deviceDetailsDTO.getmaxHourlyEnergyConsumption(), deviceDetailsDTO.getUserID());
     }
 
 }

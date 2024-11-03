@@ -65,7 +65,8 @@ public class DeviceService {
 
         device.setDescription(deviceDTO.getDescription());
         device.setAddress(deviceDTO.getAddress());
-        device.setMax_hourly_energy_consumption(deviceDTO.getMax_hourly_energy_consumption());
+        device.setmaxHourlyEnergyConsumption(deviceDTO.getmaxHourlyEnergyConsumption());
+        device.setUserId(deviceDTO.getUserID());
 
         deviceRepository.save(device);
         return device.getId();
@@ -137,5 +138,20 @@ public class DeviceService {
                 .map(DeviceBuilder::toDeviceDTO)
                 .collect(Collectors.toList());
     }
+
+
+    public void nullifyUserId(UUID userId) {
+        List<Device> devices = deviceRepository.findByUserId(userId);
+        for (Device device : devices) {
+            device.setUserId(null);
+            deviceRepository.save(device);
+        }
+    }
+
+    public UUID insertDeviceNoUser(DeviceDetailsDTO deviceDTO) {
+        Device device = DeviceBuilder.toEntity(deviceDTO);
+        return deviceRepository.save(device).getId();
+    }
+
 
 }
