@@ -47,6 +47,14 @@ services:
       - "8081:8080"
     networks:
       - my-network
+    environment:
+      DB_IP: users-db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: password
+      DB_DBNAME: users_db
+      BACKEND_DEVICE_IP: devices-app
+      BACKEND_DEVICE_PORT: 8080
     depends_on:
       - users-db
 
@@ -56,9 +64,15 @@ services:
       dockerfile: Dockerfile
     container_name: devices-app
     ports:
-      - "8082:8080"
+      - "8082:8080" #host : port container
     networks:
       - my-network
+    environment:
+      DB_IP: devices-db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: password
+      DB_DBNAME: devices_db
     depends_on:
       - devices-db
 
@@ -71,13 +85,18 @@ services:
       - "3000:3000"
     networks:
       - my-network
+    environment:
+      BACKEND_USERS: http://users-app:8080
+      BACKEND_DEVICES: http://devices-app:8080
     depends_on:
       - users-app
       - devices-app
 
 networks:
   my-network:
+    name: my-network
     driver: bridge
+    attachable: true
 
 volumes:
   users-db-data:
