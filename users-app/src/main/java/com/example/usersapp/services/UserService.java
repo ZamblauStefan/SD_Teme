@@ -4,6 +4,7 @@ import com.example.usersapp.controllers.handlers.exceptions.model.ResourceNotFou
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,11 @@ public class UserService {
     private final UserRepository userRepository;
     private final RestTemplate restTemplate; //definim RestTemplate
 
+    @Value( "${backend.ip}" )
+    private String backendIp;
+
+    @Value( "${backend.port}" )
+    private String backendPort;
 
     @Autowired
     public UserService(UserRepository userRepository, RestTemplate restTemplate) {
@@ -82,7 +88,8 @@ public class UserService {
     //Delete
     public void delete(UUID userId) {
         //setam valoarea NULL pe user_id din device
-        String devicesAppUrl = "http://localhost:8082/device/nullifyUserId/" + userId;
+        String devicesAppUrl = "http://"+ backendIp + ":" + backendPort +"/device/nullifyUserId/" + userId;
+        //String devicesAppUrl = "http://devices-app:8082/device/nullifyUserId/" + userId;
         RestTemplate restTemplate = new RestTemplate();
 
         try {
@@ -100,7 +107,7 @@ public class UserService {
         userRepository.delete(user);
 
         // Facem un apel catre devices-app pentru a sincroniza stergerea in user_aux
-        String url = "http://localhost:8082/device/deleteUserAux/" + userId;
+        String url = "http://" + backendIp + ":" + backendPort +"/device/deleteUserAux/" + userId;
 
         try {
             ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.DELETE, null, String.class);
@@ -131,7 +138,8 @@ public class UserService {
 
         try {
             //2:Apelam metoda insertUserAux din devices-app
-            String devicesAppUrl = "http://localhost:8082/device/insertUserAux"; // Endpoint-ul din devices-app
+            String devicesAppUrl = "http://"+ backendIp + ":" + backendPort + "/device/insertUserAux"; // Endpoint-ul din devices-app // pentru acces din exterior
+            //String devicesAppUrl = "http://devices-app:8082/device/insertUserAux"; //pt acces din docker tot in docker de la users-app la devices-app
             Map<String, UUID> requestBody = Map.of("userId", userId); // userId ca JSON
 
             ResponseEntity<Void> response = restTemplate.postForEntity(devicesAppUrl, requestBody, Void.class);

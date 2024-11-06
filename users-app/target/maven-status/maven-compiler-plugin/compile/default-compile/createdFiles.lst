@@ -1,6 +1,7 @@
 com\example\usersapp\services\UserService.class
 com\example\usersapp\controllers\handlers\exceptions\model\ParameterValidationException.class
 com\example\usersapp\AppConfig.class
+com\example\usersapp\config\WebConfig$1.class
 com\example\usersapp\security\SecurityConfig.class
 com\example\usersapp\controllers\handlers\exceptions\model\ExceptionHandlerResponseDTO.class
 com\example\usersapp\dtos\builders\UserBuilder.class
@@ -9,6 +10,7 @@ com\example\usersapp\controllers\handlers\RestExceptionHandler.class
 com\example\usersapp\dtos\UserDetailsDTO.class
 com\example\usersapp\controllers\handlers\CustomSuccessHandler.class
 com\example\usersapp\controllers\handlers\exceptions\model\DuplicateResourceException.class
+com\example\usersapp\config\WebConfig.class
 com\example\usersapp\controllers\handlers\exceptions\model\ResourceNotFoundException.class
 com\example\usersapp\repositories\UserRepository.class
 com\example\usersapp\controllers\IndexController.class
