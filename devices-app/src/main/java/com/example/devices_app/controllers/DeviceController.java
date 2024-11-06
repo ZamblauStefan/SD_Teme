@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@CrossOrigin(origins = {"http://localhost:3000", "http://react-demo-master:3000"}, allowCredentials = "true")
 @RequestMapping(value = "/device")
 public class DeviceController {
 
