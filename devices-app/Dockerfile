@@ -7,8 +7,13 @@ WORKDIR /app
 # Copiem fișierul jar generat de aplicație în container
 COPY target/*.jar app.jar
 
+# Copiere certificat SSL în container
+#COPY certs/devices-app.p12 certs/devices-app.p12
+
+
 # Expunem portul pe care rulează aplicația (8081 sau 8082)
-EXPOSE 8080
+#EXPOSE 8080
+EXPOSE 8443
 
 # Comanda pentru a porni aplicația
 ENTRYPOINT ["java", "-jar", "app.jar"]

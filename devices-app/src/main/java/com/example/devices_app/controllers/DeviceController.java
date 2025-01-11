@@ -14,7 +14,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import com.example.devices_app.services.DeviceService;
 
-
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
@@ -23,16 +22,16 @@ import java.util.UUID;
 //import pentru verificari
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.client.RestTemplate;
 
 
 @RestController
-@CrossOrigin(origins = {"http://localhost:3000", "http://react-demo-master:3000"}, allowCredentials = "true")
+@CrossOrigin(origins = "https://frontend.localhost", allowCredentials = "true")
 @RequestMapping(value = "/device")
 public class DeviceController {
 
     private final DeviceService deviceService;
     private static final Logger LOGGER = LoggerFactory.getLogger(DeviceController.class);
-
 
     @Autowired
     public DeviceController(DeviceService deviceService) {
@@ -42,6 +41,8 @@ public class DeviceController {
     @GetMapping()
     public ResponseEntity<List<DeviceDTO>> getDevices() {
         List<DeviceDTO> dtos = deviceService.findDevices();
+        System.out.println("Devices retrieved: " + dtos.size());
+
         for (DeviceDTO dto : dtos) {
             Link deviceLink = linkTo(methodOn(DeviceController.class)
                     .getDevice(dto.getId())).withRel("deviceDetails");
@@ -94,10 +95,12 @@ public class DeviceController {
     @DeleteMapping("/deleteUserAux/{userId}")
     public ResponseEntity<String> deleteUserAux(@PathVariable UUID userId) {
         boolean isDeleted = deviceService.deleteUserAux(userId);
-
+        LOGGER.info("Delete request received for userId: {}", userId);
         if (isDeleted) {
+            LOGGER.info("User deleted successfully from users_aux.");
             return ResponseEntity.ok("User deleted successfully from users_aux.");
         } else {
+            LOGGER.warn("User not found in users_aux.");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found in users_aux.");
         }
     }
@@ -116,6 +119,8 @@ public class DeviceController {
 
     @PostMapping("/nullifyUserId/{userId}")
     public ResponseEntity<Void> nullifyUserId(@PathVariable UUID userId) {
+        LOGGER.info("Received request to nullify userId: {}", userId);
+       // LOGGER.info("Authorization Header: {}", request.getHeader("Authorization"));
         try {
             deviceService.nullifyUserId(userId);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -130,6 +135,10 @@ public class DeviceController {
         return new ResponseEntity<>(deviceID, HttpStatus.CREATED);
     }
 
+    @GetMapping("/test")
+    public ResponseEntity<String> testEndpoint() {
+        return ResponseEntity.ok("Test endpoint reached!");
+    }
 
 
 }
