@@ -1,14 +1,28 @@
 # Folosim o imagine de bază cu Java JDK 17
 FROM openjdk:17-jdk-slim
 
+# Instalăm Python și pip
+RUN apt-get update && apt-get install -y python3 python3-pip && ln -s /usr/bin/python3 /usr/bin/python
+
+# Instalăm librăria pika pentru RabbitMQ
+RUN pip3 install pika
+
 # Setăm directorul de lucru
 WORKDIR /app
 
 # Copiem fișierul jar generat de aplicație în container
 COPY target/*.jar app.jar
 
+#Copiem Certificatele
+#COPY certs/users-app.p12 /certs/users-app.p12
+
+# Copiem scriptul Python și fișierul CSV în container
+COPY Producer.py /app/Producer.py
+COPY sensor.csv /app/sensor.csv
+
 # Expunem portul pe care rulează aplicația
-EXPOSE 8080
+#EXPOSE 8080
+EXPOSE 8443
 
 # Comanda pentru a porni aplicația
 ENTRYPOINT ["java", "-jar", "app.jar"]

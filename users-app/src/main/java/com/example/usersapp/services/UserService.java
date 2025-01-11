@@ -5,17 +5,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.*;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.example.usersapp.repositories.UserRepository;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import com.example.usersapp.entities.User;
@@ -24,6 +28,8 @@ import com.example.usersapp.dtos.UserDetailsDTO;
 import com.example.usersapp.dtos.builders.UserBuilder;
 import org.springframework.web.client.RestTemplate;
 
+@Configuration
+@EnableAsync
 @Service
 public class UserService {
 
@@ -45,6 +51,7 @@ public class UserService {
 
     public List<UserDTO> findUsers() {
         List<User> userList = userRepository.findAll();
+        System.out.println("Users retrieved from DB: " + userList);
         return userList.stream()
                 .map(UserBuilder::toUserDTO)
                 .collect(Collectors.toList());
@@ -86,14 +93,22 @@ public class UserService {
     }
 
     //Delete
-    public void delete(UUID userId) {
-        //setam valoarea NULL pe user_id din device
-        String devicesAppUrl = "http://"+ backendIp + ":" + backendPort +"/device/nullifyUserId/" + userId;
-        //String devicesAppUrl = "http://devices-app:8082/device/nullifyUserId/" + userId;
+    public void delete(UUID userId, String token) {
         RestTemplate restTemplate = new RestTemplate();
 
+        // Setăm header-ul cu tokenul JWT
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token);
+
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        // 1. Setăm valoarea NULL pe user_id din device (devices-app)
+        String nullifyUrl = "https://" + backendIp + ":" + backendPort + "/device/nullifyUserId/" + userId;
+        LOGGER.info("Sending POST request to {}", nullifyUrl);
+
         try {
-            ResponseEntity<Void> response = restTemplate.postForEntity(devicesAppUrl, null, Void.class);
+            ResponseEntity<Void> response = restTemplate.exchange(nullifyUrl, HttpMethod.POST, entity, Void.class);
+            LOGGER.info("Response from nullifyUserId: {}", response.getStatusCode());
             if (!response.getStatusCode().is2xxSuccessful()) {
                 throw new RuntimeException("Eroare la setarea valorii null pentru user_id în devices-db.");
             }
@@ -101,17 +116,17 @@ public class UserService {
             throw new RuntimeException("Eroare la setarea valorii null pentru user_id în devices-db: " + e.getMessage());
         }
 
+        // 2. Ștergem utilizatorul din baza de date users-db
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
-        // Stergem utilizatorul din baza de date users-db
         userRepository.delete(user);
 
-        // Facem un apel catre devices-app pentru a sincroniza stergerea in user_aux
-        String url = "http://" + backendIp + ":" + backendPort +"/device/deleteUserAux/" + userId;
+        // 3. Apelăm deleteUserAux din devices-app pentru a sincroniza ștergerea în user_aux
+        String deleteUrl = "https://" + backendIp + ":" + backendPort + "/device/deleteUserAux/" + userId;
+        LOGGER.info("Sending DELETE request to {}", deleteUrl);
 
         try {
-            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.DELETE, null, String.class);
-
+            ResponseEntity<String> response = restTemplate.exchange(deleteUrl, HttpMethod.DELETE, entity, String.class);
             if (response.getStatusCode() == HttpStatus.OK) {
                 LOGGER.info("User deleted successfully from users_aux in devices-app.");
             } else {
@@ -124,39 +139,64 @@ public class UserService {
     }
 
 
+
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public UUID insertUserWithSync(UserDetailsDTO userDTO) {
-        //1:Inseram utilizatorul in users-db
+    public UUID insertUserWithSync(UserDetailsDTO userDTO, String token) {
+        // 1. Inserare utilizator în users-db
         User user = UserBuilder.toEntity(userDTO);
-        // Criptarea parolei
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
 
         user = userRepository.save(user);
         UUID userId = user.getId();
 
         try {
-            //2:Apelam metoda insertUserAux din devices-app
-            String devicesAppUrl = "http://"+ backendIp + ":" + backendPort + "/device/insertUserAux"; // Endpoint-ul din devices-app // pentru acces din exterior
-            //String devicesAppUrl = "http://devices-app:8082/device/insertUserAux"; //pt acces din docker tot in docker de la users-app la devices-app
-            Map<String, UUID> requestBody = Map.of("userId", userId); // userId ca JSON
+            // 2. Construim request-ul catre devices-app
+            String devicesAppUrl = "http://" + backendIp + ":" + backendPort + "/device/insertUserAux";
+            Map<String, UUID> requestBody = Map.of("userId", userId);
 
-            ResponseEntity<Void> response = restTemplate.postForEntity(devicesAppUrl, requestBody, Void.class);
+            // Transmiterea tokenului existent în header
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            // Adăugăm tokenul JWT la header
+            if (token != null && !token.startsWith("Bearer ")) {
+                token = "Bearer " + token; // Adăugăm prefixul 'Bearer' dacă lipsește
+            }
+            headers.set("Authorization", token); // Transmit tokenul primit din frontend
 
-            // if(inserarea in users_aux a avut succes) then return userId
+            HttpEntity<Map<String, UUID>> entity = new HttpEntity<>(requestBody, headers);
+
+            ResponseEntity<Void> response = restTemplate.postForEntity(devicesAppUrl, entity, Void.class);
+
+            // 3. Verificăm răspunsul
             if (response.getStatusCode().is2xxSuccessful()) {
                 return userId;
             } else {
-                // 3: if fail then se face revert
-                userRepository.deleteById(userId);
-                throw new RuntimeException("Inserare esuata in devices-db; revert efectuat in users-db.");
+                userRepository.deleteById(userId); // Revert în caz de eroare
+                throw new RuntimeException("Inserare eșuată în devices-db; revert efectuat în users-db.");
             }
         } catch (Exception e) {
-            // Se face revert in caz de eroare
-            userRepository.deleteById(userId);
+            userRepository.deleteById(userId); // Revert în caz de excepție
             throw new RuntimeException("Eroare la sincronizare: " + e.getMessage());
         }
     }
+
+    @Async
+    public CompletableFuture<String> runProducerScript(String deviceId) {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                String command = "python /app/Producer.py " + deviceId;
+                ProcessBuilder processBuilder = new ProcessBuilder(command.split(" "));
+                processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+                processBuilder.redirectError(ProcessBuilder.Redirect.INHERIT);
+                processBuilder.start();
+                return "Script started successfully.";
+            } catch (Exception e) {
+                return "Error while executing script: " + e.getMessage();
+            }
+        });
+    }
+
 
 }

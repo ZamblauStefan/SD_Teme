@@ -1,5 +1,4 @@
 D:\DS2024_30241_Zamblau_Stefan\Assignment_1\users-app\src\main\java\com\example\usersapp\AppConfig.java
-D:\DS2024_30241_Zamblau_Stefan\Assignment_1\users-app\src\main\java\com\example\usersapp\config\WebConfig.java
 D:\DS2024_30241_Zamblau_Stefan\Assignment_1\users-app\src\main\java\com\example\usersapp\controllers\handlers\CustomSuccessHandler.java
 D:\DS2024_30241_Zamblau_Stefan\Assignment_1\users-app\src\main\java\com\example\usersapp\controllers\handlers\exceptions\model\CustomException.java
 D:\DS2024_30241_Zamblau_Stefan\Assignment_1\users-app\src\main\java\com\example\usersapp\controllers\handlers\exceptions\model\DuplicateResourceException.java
@@ -18,6 +17,8 @@ D:\DS2024_30241_Zamblau_Stefan\Assignment_1\users-app\src\main\java\com\example\
 D:\DS2024_30241_Zamblau_Stefan\Assignment_1\users-app\src\main\java\com\example\usersapp\entities\LoginRequest.java
 D:\DS2024_30241_Zamblau_Stefan\Assignment_1\users-app\src\main\java\com\example\usersapp\entities\User.java
 D:\DS2024_30241_Zamblau_Stefan\Assignment_1\users-app\src\main\java\com\example\usersapp\repositories\UserRepository.java
+D:\DS2024_30241_Zamblau_Stefan\Assignment_1\users-app\src\main\java\com\example\usersapp\security\JwtAuthenticationFilter.java
+D:\DS2024_30241_Zamblau_Stefan\Assignment_1\users-app\src\main\java\com\example\usersapp\security\JwtTokenUtil.java
 D:\DS2024_30241_Zamblau_Stefan\Assignment_1\users-app\src\main\java\com\example\usersapp\security\SecurityConfig.java
 D:\DS2024_30241_Zamblau_Stefan\Assignment_1\users-app\src\main\java\com\example\usersapp\services\CustomUserDetailsService.java
 D:\DS2024_30241_Zamblau_Stefan\Assignment_1\users-app\src\main\java\com\example\usersapp\services\UserService.java
