@@ -13,7 +13,7 @@ function Login() {
 
         // Trimite cererea de login catre backend
         try {
-            const response = await fetch('http://localhost:8081/api/login', {
+            const response = await fetch('https://localhost:8081/api/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

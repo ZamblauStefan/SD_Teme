@@ -352,3 +352,37 @@ th, td {
     background: rgba(0, 0, 0, 0.5); /* Fundal semi-transparent pentru a face textul mai lizibil */
     border-radius: 10px;
 }
+
+.client-page-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 20px;
+    width: 100%;
+    min-height: 100vh;
+}
+
+.dashboard-section, .chart-section, .messages-section {
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 30%;
+    min-height: 400px;
+}
+
+.messages-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.message-box {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: yellow;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 5px;
+    min-height: 150px;
+}

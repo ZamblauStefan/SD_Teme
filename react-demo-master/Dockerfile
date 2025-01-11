@@ -21,6 +21,9 @@ COPY --from=build /app/build /usr/share/nginx/html
 # Copiem configurația nginx personalizată
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
+# Copiem certificatul
+#COPY certs/frontend.jks /certs/frontend.jks
+
 # Expunem portul 3000
 EXPOSE 3000
 

@@ -56,16 +56,26 @@ function LoginPage() {
         };
 
         try {
-            const response = await fetch('http://localhost:8081/user/login', {
+            const usersApiUrl = process.env.REACT_APP_BACKEND_USERS || 'https://users-app.localhost';
+            const token = localStorage.getItem('token');
+            const response = await fetch(`${usersApiUrl}/user/login`, {
                 method: 'POST',
                 headers: {
+                    'Authorization': `Bearer ${token}`, // token-ul JWT
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(requestBody),
+
             });
+
+            console.log("Response status:", response.status);
+            console.log("Response headers:", response.headers);
+
 
             if (response.ok) {
                 const data = await response.json();
+                console.log("Token primit:", data.token); // Verifică token-ul primit in consola browserului
+
                 console.log(data);  // Verifica daca `data` contine `userId`
                 // Salveaza detalile userului in localStorage
                 localStorage.setItem('userId', data.userId);
@@ -77,7 +87,7 @@ function LoginPage() {
                 localStorage.setItem('userName', data.name); //salvam numele
                 console.log("User Name saved:", data.name);
 
-                localStorage.setItem('token', data.token); //salvam token (deocamdata nefolosit)
+                localStorage.setItem('token', data.token); //salvam token (jwt)
                 console.log("Token saved:", data.token);
 
                 // Redirectioneaza la pagina corespunzatoare rolului
